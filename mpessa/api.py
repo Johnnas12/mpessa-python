@@ -104,4 +104,33 @@ class Mpessa:
                 raise Exception(f"Network error occurred during Pay Out: {str(e)}")
             
 
+    async def transaction_status(self, payload):
+        """
+        Check the status of a transaction asynchronously.
+
+        :param payload: dict
+            The data required to request transaction status.
+        :return: dict
+            Response from the API if successful.  
+        :raises Exception: If authentication token is missing or the request fails.
+        """
+        if not self.auth.access_token:
+            raise Exception("No authentication token available. Please authenticate first.")
+
+        url = "https://apisandbox.safaricom.et/mpesa/transactionstatus/v1/query"
+        headers = {
+            "Authorization": f"Bearer {self.auth.access_token}",
+            "Content-Type": "application/json"
+        }
+
+        async with httpx.AsyncClient() as client:
+            try:
+                response = await client.post(url, json=payload, headers=headers)
+                if response.status_code == 200:
+                    return response.json()
+                else:
+                    raise Exception(f"Transaction Status failed: {response.status_code}, {response.text}")
+            except httpx.RequestError as e:
+                raise Exception(f"Network error occurred during Transaction Status: {str(e)}")
+
         
