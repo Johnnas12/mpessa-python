@@ -1,12 +1,13 @@
+import asyncio
 from mpessa.auth import Auth
 from mpessa.api import Mpessa
 
-def main():
+async def main():
     # Initialize authentication and authenticate
     base_url = "https://apisandbox.safaricom.et/v1/token/generate?grant_type=client_credentials"
     auth = Auth(base_url=base_url)
     try:
-        auth.authenticate()
+        await auth.authenticate()
         print("Authentication successful.")
     except Exception as e:
         print(f"Error during authentication: {e}")
@@ -35,10 +36,10 @@ def main():
 
     # Perform USSD PUSH Checkout
     try:
-        response = mpessa.ussd_push_checkout(payload=payload)
+        response = await mpessa.ussd_push_checkout(payload=payload)
         print("USSD PUSH Checkout successful:", response)
     except Exception as e:
         print(f"Error during USSD PUSH Checkout: {e}")
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

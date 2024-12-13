@@ -1,14 +1,15 @@
+import asyncio
 from mpessa.auth import Auth
 
-def main():
-    base_url = "https://apisandbox.safaricom.et/v1/token/generate?grant_type=client_credentials"  # Replace with the actual endpoint
-    auth = Auth(base_url=base_url)
+async def main():
+    base_url = "https://apisandbox.safaricom.et/v1/token/generate?grant_type=client_credentials"
 
+    auth = Auth(base_url=base_url)
     try:
-        result = auth.authenticate()
+        result = await auth.authenticate()
         print("Authentication successful:", result)
     except Exception as e:
-        print("Error during authentication:", e)
+        print("Error during authentication:", str(e))
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
