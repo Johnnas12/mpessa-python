@@ -132,5 +132,63 @@ class Mpessa:
                     raise Exception(f"Transaction Status failed: {response.status_code}, {response.text}")
             except httpx.RequestError as e:
                 raise Exception(f"Network error occurred during Transaction Status: {str(e)}")
+            
 
-        
+    async def account_balance(self, payload):
+        """
+        Check the account balance asynchronously.
+
+        :param payload: dict
+            The data required to request account balance.
+        :return: dict
+            Response from the API if successful.
+        :raises Exception: If authentication token is missing or the request fails.
+        """
+        if not self.auth.access_token:
+            raise Exception("No authentication token available. Please authenticate first.")
+
+        url = "https://apisandbox.safaricom.et/mpesa/accountbalance/v2/query"
+        headers = {
+            "Authorization": f"Bearer {self.auth.access_token}",
+            "Content-Type": "application/json"
+        }
+
+        async with httpx.AsyncClient() as client:
+            try:
+                response = await client.post(url, json=payload, headers=headers)
+                if response.status_code == 200:
+                    return response.json()
+                else:
+                    raise Exception(f"Account Balance request failed: {response.status_code}, {response.text}")
+            except httpx.RequestError as e:
+                raise Exception(f"Network error occurred during Account Balance request: {str(e)}")
+            
+
+    async def transaction_reversal(self, payload):
+        """
+        Reverse a transaction asynchronously.
+
+        :param payload: dict
+            The data required to reverse a transaction.
+        :return: dict
+            Response from the API if successful.
+        :raises Exception: If authentication token is missing or the request fails.
+        """
+        if not self.auth.access_token:
+            raise Exception("No authentication token available. Please authenticate first.")
+
+        url = "https://apisandbox.safaricom.et/mpesa/reversal/v2/request"
+        headers = {
+            "Authorization": f"Bearer {self.auth.access_token}",
+            "Content-Type": "application/json"
+        }
+
+        async with httpx.AsyncClient() as client:
+            try:
+                response = await client.post(url, json=payload, headers=headers)
+                if response.status_code == 200:
+                    return response.json()
+                else:
+                    raise Exception(f"Transaction Reversal failed: {response.status_code}, {response.text}")
+            except httpx.RequestError as e:
+                raise Exception(f"Network error occurred during Transaction Reversal: {str(e)}")
